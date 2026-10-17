@@ -262,6 +262,36 @@
     .animate-shake {
       animation: shake 0.45s ease-in-out;
     }
+
+    /* Memory Match 3D Cards */
+    .memory-card {
+      perspective: 1000px;
+      -webkit-perspective: 1000px;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .memory-card-inner {
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .memory-card.is-flipped .memory-card-inner,
+    .memory-card.is-matched .memory-card-inner {
+      transform: rotateY(180deg);
+      -webkit-transform: rotateY(180deg);
+    }
+    .memory-card-front, .memory-card-back {
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+    .memory-card.is-matched {
+      animation: matchBounce 0.45s ease-out;
+    }
+    @keyframes matchBounce {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
   </style>
 </head>
 <body class="relative min-h-screen font-sans selection:bg-rose-200 selection:text-rose-900">
@@ -802,37 +832,97 @@
   </main>
 
   <!-- ======================================================== -->
-  <!-- 2. GAME VIEW: DATE PLANNER MINI-GAME                    -->
+  <!-- 2. GAME VIEW: MINI-GAME BÍ ẨN & LÊN LỊCH HẸN HÒ          -->
   <!-- ======================================================== -->
   <section id="gameView" class="hidden relative z-20 w-full max-w-2xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-24 overflow-x-hidden">
     
-    <!-- Game Header -->
-    <div class="text-center max-w-lg mx-auto mb-8 sm:mb-10">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100/70 border border-amber-200/80 backdrop-blur-sm text-xs font-medium text-amber-800 mb-3 shadow-xs">
-        <span class="inline-block w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
-        <span>Mini-Game: Vé Hẹn Hò Bí Mật 🎟️</span>
-      </div>
-      <h2 class="text-3xl sm:text-4xl font-serif text-stone-800 leading-tight">
-        Lên Kèo Đi Chơi Cùng Người Bí Ẩn ✨
-      </h2>
-      <p class="text-stone-600 text-xs sm:text-sm mt-2 font-light max-w-md mx-auto leading-relaxed">
-        Thu cứ thoải mái chọn ngày giờ & địa điểm mình thích nhé, phần chuẩn bị và bao trọn gói cứ để Người Bí Ẩn lo! 🌸
-      </p>
+    <!-- ======================================================== -->
+    <!-- STAGE 1: THỬ THÁCH BÍ ẨN - LẬT THẺ TÌM CẶP KỶ NIỆM      -->
+    <!-- ======================================================== -->
+    <div id="memoryGameStage" class="space-y-6">
+      
+      <!-- Stage Header -->
+      <div class="text-center max-w-lg mx-auto mb-6">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-100/70 border border-rose-200/80 backdrop-blur-sm text-xs font-medium text-rose-800 mb-3 shadow-xs">
+          <span class="inline-block w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+          <span>Thử Thách Bí Ẩn 🔮</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-serif text-stone-800 leading-tight">
+          Giải Mã Hộp Quà Kỷ Niệm ✨
+        </h2>
+        <p class="text-stone-600 text-xs sm:text-sm mt-2 font-light max-w-md mx-auto leading-relaxed">
+          Thu hãy lật tìm đủ 3 cặp hình giống nhau để mở khóa phần thưởng bí mật mà Người Bí Ẩn dành riêng cho Thu nhé! 🌸
+        </p>
 
-      <!-- Step Indicators (1 - 2 - 3 - 4) -->
-      <div class="mt-6 flex items-center justify-center gap-2 sm:gap-3 max-w-xs mx-auto">
-        <div id="stepDot1" class="flex-1 h-1.5 rounded-full bg-rose-500 transition-all duration-300"></div>
-        <div id="stepDot2" class="flex-1 h-1.5 rounded-full bg-stone-200 transition-all duration-300"></div>
-        <div id="stepDot3" class="flex-1 h-1.5 rounded-full bg-stone-200 transition-all duration-300"></div>
-        <div id="stepDot4" class="flex-1 h-1.5 rounded-full bg-stone-200 transition-all duration-300"></div>
+        <!-- Progress Counter Badge -->
+        <div class="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-rose-200/80 shadow-xs text-xs font-medium text-stone-700">
+          <span>Tiến độ:</span>
+          <span id="matchScoreDisplay" class="font-bold text-rose-600 text-sm">0</span>
+          <span>/ 3 cặp hình đã ghép ✨</span>
+        </div>
       </div>
+
+      <!-- 6 Memory Cards Grid (3 columns x 2 rows) -->
+      <div id="memoryBoard" class="grid grid-cols-3 gap-3 sm:gap-4 max-w-md mx-auto p-4 sm:p-6 rounded-3xl bg-white/90 backdrop-blur-md border border-white shadow-floating">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+
+      <!-- Victory Card (Appears after 3/3 matches) -->
+      <div id="memoryVictoryCard" class="hidden max-w-md mx-auto p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-rose-50 via-white to-amber-50 border-2 border-rose-300 shadow-floating text-center">
+        <span class="text-4xl sm:text-5xl block mb-2">🎉</span>
+        <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider font-sans">
+          Thử Thách Hoàn Thành!
+        </span>
+        <h3 class="font-serif text-2xl sm:text-3xl text-stone-800 mt-2 font-bold leading-tight">
+          Chúc Mừng Hoài Thu! 🌸
+        </h3>
+        <p class="text-xs sm:text-sm text-stone-600 mt-2 max-w-sm mx-auto leading-relaxed font-light">
+          Thu đã xuất sắc mở khóa thành công phần thưởng bí mật: <br/>
+          <strong class="font-bold text-rose-600 text-sm sm:text-base">1 Vé Hẹn Hò VIP Trọn Gói Cùng Người Bí Ẩn 🎟️✨</strong>
+        </p>
+        <div class="mt-6">
+          <button type="button" id="startPlannerBtn" 
+            class="px-7 py-3.5 rounded-full bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-medium text-xs sm:text-sm shadow-lg shadow-rose-500/25 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 mx-auto">
+            <span>Mở Khóa Vé & Chọn Lịch Đi Chơi</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Container for Game Steps -->
-    <div class="relative bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-9 border border-white shadow-floating">
+    <!-- ======================================================== -->
+    <!-- STAGE 2: DATE PLANNER (Unlocked after winning game)      -->
+    <!-- ======================================================== -->
+    <div id="plannerStage" class="hidden space-y-8">
       
-      <!-- ================= STEP 1: CHỌN ĐỊA ĐIỂM / VIBE ================= -->
-      <div id="gameStep1" class="game-step space-y-6">
+      <!-- Game Header -->
+      <div class="text-center max-w-lg mx-auto mb-8 sm:mb-10">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100/70 border border-amber-200/80 backdrop-blur-sm text-xs font-medium text-amber-800 mb-3 shadow-xs">
+          <span class="inline-block w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+          <span>Phần Thưởng: Vé Hẹn Hò Bí Mật 🎟️</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-serif text-stone-800 leading-tight">
+          Lên Kèo Đi Chơi Cùng Người Bí Ẩn ✨
+        </h2>
+        <p class="text-stone-600 text-xs sm:text-sm mt-2 font-light max-w-md mx-auto leading-relaxed">
+          Thu cứ thoải mái chọn ngày giờ & địa điểm mình thích nhé, phần chuẩn bị và bao trọn gói cứ để Người Bí Ẩn lo! 🌸
+        </p>
+
+        <!-- Step Indicators (1 - 2 - 3 - 4) -->
+        <div class="mt-6 flex items-center justify-center gap-2 sm:gap-3 max-w-xs mx-auto">
+          <div id="stepDot1" class="flex-1 h-1.5 rounded-full bg-rose-500 transition-all duration-300"></div>
+          <div id="stepDot2" class="flex-1 h-1.5 rounded-full bg-stone-200 transition-all duration-300"></div>
+          <div id="stepDot3" class="flex-1 h-1.5 rounded-full bg-stone-200 transition-all duration-300"></div>
+          <div id="stepDot4" class="flex-1 h-1.5 rounded-full bg-stone-200 transition-all duration-300"></div>
+        </div>
+      </div>
+
+      <!-- Container for Game Steps -->
+      <div class="relative bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-9 border border-white shadow-floating">
+        
+        <!-- ================= STEP 1: CHỌN ĐỊA ĐIỂM / VIBE ================= -->
+        <div id="gameStep1" class="game-step space-y-6">
         <div class="border-b border-rose-100 pb-3">
           <span class="text-xs uppercase tracking-wider font-semibold text-rose-500">Bước 1 / 4</span>
           <h3 class="font-serif text-xl sm:text-2xl text-stone-800 mt-0.5">
@@ -1192,11 +1282,21 @@
             ✨ Đã sao chép tin nhắn! Thu chỉ cần dán gửi qua Zalo / Messenger cho Người Bí Ẩn nhé! 🌸
           </div>
 
+          <!-- Replay Memory Game Link -->
+          <div class="pt-2 text-center">
+            <button type="button" id="replayMemoryGameBtn" 
+              class="text-[11px] text-stone-400 hover:text-rose-500 transition-colors underline underline-offset-4 cursor-pointer">
+              🎮 Chơi lại thử thách lật thẻ bí ẩn
+            </button>
+          </div>
+
         </div>
 
       </div>
 
     </div>
+
+    </div> <!-- Close #plannerStage -->
 
   </section>
 
@@ -1658,6 +1758,14 @@
         if (wishesView) wishesView.classList.add('hidden');
         if (gameView) gameView.classList.remove('hidden');
 
+        if (!isPlannerUnlocked) {
+          if (memoryGameStage) memoryGameStage.classList.remove('hidden');
+          if (plannerStage) plannerStage.classList.add('hidden');
+        } else {
+          if (memoryGameStage) memoryGameStage.classList.add('hidden');
+          if (plannerStage) plannerStage.classList.remove('hidden');
+        }
+
         if (navWishesBtn && navGameBtn) {
           navGameBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 bg-rose-500 text-white shadow-xs";
           navWishesBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 text-stone-600 hover:text-rose-600";
@@ -1738,7 +1846,161 @@
       if (navGameBtn) navGameBtn.addEventListener('click', showGameView);
 
       // ----------------------------------------------------
-      // 10. MINI-GAME DATE PLANNER LOGIC
+      // 10. THỬ THÁCH BÍ ẨN: LẬT THẺ TÌM CẶP KỶ NIỆM (MEMORY MATCH)
+      // ----------------------------------------------------
+      const memoryGameStage = document.getElementById('memoryGameStage');
+      const plannerStage = document.getElementById('plannerStage');
+      const memoryBoard = document.getElementById('memoryBoard');
+      const matchScoreDisplay = document.getElementById('matchScoreDisplay');
+      const memoryVictoryCard = document.getElementById('memoryVictoryCard');
+      const startPlannerBtn = document.getElementById('startPlannerBtn');
+      const replayMemoryGameBtn = document.getElementById('replayMemoryGameBtn');
+
+      let isPlannerUnlocked = false;
+      let flippedCards = [];
+      let lockBoard = false;
+      let matchesFound = 0;
+
+      const MEMORY_ITEMS = [
+        { type: 'cake', icon: '🎂', title: 'Bánh Kem' },
+        { type: 'cake', icon: '🎂', title: 'Bánh Kem' },
+        { type: 'flower', icon: '🌷', title: 'Hoa Tulip' },
+        { type: 'flower', icon: '🌷', title: 'Hoa Tulip' },
+        { type: 'ticket', icon: '🎟️', title: 'Vé Hẹn Hò' },
+        { type: 'ticket', icon: '🎟️', title: 'Vé Hẹn Hò' }
+      ];
+
+      function initMemoryGame() {
+        if (!memoryBoard) return;
+        memoryBoard.innerHTML = '';
+        flippedCards = [];
+        lockBoard = false;
+        matchesFound = 0;
+        if (matchScoreDisplay) matchScoreDisplay.textContent = '0';
+        if (memoryVictoryCard) memoryVictoryCard.classList.add('hidden');
+
+        // Shuffle with Fisher-Yates
+        const shuffled = [...MEMORY_ITEMS].sort(() => Math.random() - 0.5);
+
+        shuffled.forEach((item, index) => {
+          const cardEl = document.createElement('div');
+          cardEl.className = 'memory-card relative h-28 sm:h-36 rounded-2xl cursor-pointer';
+          cardEl.dataset.type = item.type;
+          cardEl.dataset.index = index;
+
+          cardEl.innerHTML = `
+            <div class="memory-card-inner relative w-full h-full text-center">
+              <!-- Front (Face down / khi úp) -->
+              <div class="memory-card-front absolute inset-0 rounded-2xl bg-gradient-to-br from-rose-50 via-pink-50 to-amber-50 border-2 border-rose-200/80 shadow-soft-card flex flex-col items-center justify-center p-2 group hover:border-rose-400 transition-colors">
+                <span class="text-2xl sm:text-3xl mb-1 transform group-hover:scale-110 transition-transform">🎁</span>
+                <span class="text-[10px] sm:text-xs font-serif font-semibold text-rose-500">Mở ra nè</span>
+              </div>
+              <!-- Back (Face up / khi lật) -->
+              <div class="memory-card-back absolute inset-0 rounded-2xl bg-white border-2 border-rose-400 shadow-floating flex flex-col items-center justify-center p-2">
+                <span class="text-3xl sm:text-4xl mb-1">${item.icon}</span>
+                <span class="text-[10px] sm:text-xs font-serif font-bold text-stone-800">${item.title}</span>
+              </div>
+            </div>
+          `;
+
+          cardEl.addEventListener('click', () => handleCardClick(cardEl));
+          memoryBoard.appendChild(cardEl);
+        });
+      }
+
+      function handleCardClick(card) {
+        if (lockBoard) return;
+        if (card.classList.contains('is-flipped') || card.classList.contains('is-matched')) return;
+
+        // Flip card
+        card.classList.add('is-flipped');
+        flippedCards.push(card);
+
+        if (flippedCards.length === 2) {
+          lockBoard = true;
+          const [card1, card2] = flippedCards;
+
+          if (card1.dataset.type === card2.dataset.type) {
+            // Match found!
+            card1.classList.add('is-matched');
+            card2.classList.add('is-matched');
+            matchesFound++;
+            if (matchScoreDisplay) matchScoreDisplay.textContent = matchesFound;
+
+            // Mini celebration confetti burst
+            confetti({
+              particleCount: 25,
+              spread: 50,
+              origin: { y: 0.6 },
+              colors: pastelColors
+            });
+
+            flippedCards = [];
+            lockBoard = false;
+
+            // Check Win Condition: 3 pairs
+            if (matchesFound === 3) {
+              setTimeout(() => {
+                isPlannerUnlocked = true;
+                fireMassiveCelebration();
+                if (memoryVictoryCard) {
+                  memoryVictoryCard.classList.remove('hidden');
+                  if (window.gsap) {
+                    gsap.fromTo(memoryVictoryCard, 
+                      { opacity: 0, scale: 0.9, y: 20 },
+                      { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: 'back.out(1.5)' }
+                    );
+                  }
+                  memoryVictoryCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+              }, 450);
+            }
+          } else {
+            // Not a match: flip back after delay
+            setTimeout(() => {
+              card1.classList.remove('is-flipped');
+              card2.classList.remove('is-flipped');
+              flippedCards = [];
+              lockBoard = false;
+            }, 750);
+          }
+        }
+      }
+
+      // Unlock button -> Enter Date Planner
+      if (startPlannerBtn) {
+        startPlannerBtn.addEventListener('click', () => {
+          if (memoryGameStage) memoryGameStage.classList.add('hidden');
+          if (plannerStage) {
+            plannerStage.classList.remove('hidden');
+            if (window.gsap) {
+              gsap.fromTo(plannerStage, 
+                { opacity: 0, y: 25 },
+                { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }
+              );
+            }
+          }
+          setGameStep(1);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      // Replay memory game from ticket result
+      if (replayMemoryGameBtn) {
+        replayMemoryGameBtn.addEventListener('click', () => {
+          isPlannerUnlocked = false;
+          if (plannerStage) plannerStage.classList.add('hidden');
+          if (memoryGameStage) memoryGameStage.classList.remove('hidden');
+          initMemoryGame();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      // Initialize game on load
+      initMemoryGame();
+
+      // ----------------------------------------------------
+      // 11. MINI-GAME DATE PLANNER LOGIC
       // ----------------------------------------------------
       const gameSteps = [
         document.getElementById('gameStep1'),
