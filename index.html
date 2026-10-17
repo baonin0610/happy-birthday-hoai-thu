@@ -886,7 +886,7 @@
           Truy Tìm Vé Hẹn Hò VIP ✨
         </h2>
         <p class="text-stone-600 text-xs sm:text-sm mt-2 font-light max-w-md mx-auto leading-relaxed">
-          Trong 6 hộp quà có <strong class="text-rose-600 font-semibold">đúng 1 Vé Hẹn Hò VIP</strong>! Thu có tối đa <strong>3 lượt mở</strong>. Nếu lật quá 3 lần mà chưa trúng, hộp quà sẽ tự xáo trộn lại nha! 🌸
+          Trong 6 hộp quà có <strong class="text-rose-600 font-semibold">đúng 1 Vé Hẹn Hò VIP</strong>! Thu có tối đa <strong>3 lượt mở</strong>. Hãy chọn chiếc hộp Thu linh cảm nhất nha! 🌸
         </p>
 
         <!-- Attempts Counter & Status Notice -->
@@ -1965,12 +1965,50 @@
         if (isBoardBusy || isGameWon) return;
         if (card.classList.contains('is-flipped')) return;
 
-        // Flip card
-        card.classList.add('is-flipped');
         flipAttempts++;
         if (triesCountDisplay) triesCountDisplay.textContent = flipAttempts;
 
-        const isWinner = card.dataset.winner === 'true';
+        let isWinner = card.dataset.winner === 'true';
+
+        // NẾU SAI 2 LẦN -> TỚI LẦN THỨ 3 KHI BẠN ẤY ẤN VÔ SẼ TỰ ĐỘNG HIỆN RA VÉ HẸN HÒ!
+        if (flipAttempts === 3 && !isWinner) {
+          const originalTicketCard = document.querySelector('.memory-card[data-winner="true"]');
+          if (originalTicketCard && originalTicketCard !== card) {
+            // Hoán đổi nội dung mặt sau của thẻ này với thẻ chứa vé ban đầu
+            const currentBack = card.querySelector('.memory-card-back');
+            const ticketBack = originalTicketCard.querySelector('.memory-card-back');
+
+            const currentType = card.dataset.type;
+            card.dataset.type = originalTicketCard.dataset.type; // 'ticket'
+            originalTicketCard.dataset.type = currentType;
+
+            card.dataset.winner = 'true';
+            originalTicketCard.dataset.winner = 'false';
+
+            if (currentBack && ticketBack) {
+              const tempHTML = currentBack.innerHTML;
+              currentBack.innerHTML = ticketBack.innerHTML;
+              ticketBack.innerHTML = tempHTML;
+            }
+          } else {
+            // Fallback nếu cần
+            card.dataset.winner = 'true';
+            card.dataset.type = 'ticket';
+            const currentBack = card.querySelector('.memory-card-back');
+            if (currentBack) {
+              currentBack.innerHTML = `
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-2xl sm:text-3xl mb-1 shadow-xs">
+                  🎟️
+                </div>
+                <span class="text-[10px] sm:text-xs font-serif font-bold text-stone-800">Vé Hẹn Hò VIP</span>
+              `;
+            }
+          }
+          isWinner = true;
+        }
+
+        // Lật thẻ
+        card.classList.add('is-flipped');
 
         // 1. TRÚNG VÉ HẸN HÒ! (THẮNG)
         if (isWinner) {
@@ -1979,7 +2017,13 @@
           card.classList.add('is-matched');
 
           if (gameStatusNotice) {
-            gameStatusNotice.innerHTML = '🎉 Chính xác! Đã tìm trúng Vé Hẹn Hò VIP!';
+            if (flipAttempts === 1) {
+              gameStatusNotice.innerHTML = '🎉 Thần tài đến! Ngay lượt đầu tiên Thu đã trúng Vé Hẹn Hò VIP! 🎟️✨';
+            } else if (flipAttempts === 2) {
+              gameStatusNotice.innerHTML = '🎉 Xuất sắc! Thu đã tìm trúng Vé Hẹn Hò VIP rồi nè! 🎟️✨';
+            } else {
+              gameStatusNotice.innerHTML = '🎉 Thần kỳ ghê chưa! Lượt thứ 3 Thu đã mở trúng Vé Hẹn Hò VIP rồi! 🎟️✨';
+            }
             gameStatusNotice.className = 'text-[11px] sm:text-xs text-rose-700 font-bold px-4 py-1.5 rounded-full bg-rose-100 border border-rose-300 transition-all';
           }
 
@@ -2000,7 +2044,7 @@
           return;
         }
 
-        // 2. CHƯA TRÚNG VÉ
+        // 2. CHƯA TRÚNG VÉ (chỉ xảy ra ở lượt 1 hoặc lượt 2)
         // Playful tiny confetti
         confetti({
           particleCount: 12,
@@ -2010,33 +2054,34 @@
         });
 
         // Nếu còn lượt (< 3)
-        if (flipAttempts < 3) {
-          const remaining = 3 - flipAttempts;
+        if (flipAttempts === 1) {
           if (gameStatusNotice) {
-            gameStatusNotice.innerHTML = `Chưa phải Vé Hẹn Hò rồi 🙈 Thu còn <strong>${remaining}</strong> lượt nữa nha! 🌸`;
+            gameStatusNotice.innerHTML = 'Chưa phải Vé Hẹn Hò rồi 🙈 Thu còn <strong>2</strong> lượt nữa nha! 🌸';
             gameStatusNotice.className = 'text-[11px] sm:text-xs text-amber-800 font-medium px-4 py-1.5 rounded-full bg-amber-50 border border-amber-200 transition-all';
           }
+        } else if (flipAttempts === 2) {
+          if (gameStatusNotice) {
+            gameStatusNotice.innerHTML = 'Hơi hồi hộp rồi nha 🙈 Còn <strong>1 lượt cuối cùng</strong> quyết định nè Thu ơi! ✨';
+            gameStatusNotice.className = 'text-[11px] sm:text-xs text-rose-800 font-semibold px-4 py-1.5 rounded-full bg-rose-50 border border-rose-200 transition-all';
+          }
         } else {
-          // 3. ĐÃ LẬT QUÁ 3 CÁI MÀ SAI -> XÁO TRỘN VÀ BẮT LẬT LẠI!
+          // 3. Fallback dự phòng
           isBoardBusy = true;
           if (gameStatusNotice) {
             gameStatusNotice.innerHTML = '🙈 Tiếc quá, 3 lượt chưa trúng rồi! Đang xáo trộn lại, Thu thử lại nha... ✨';
             gameStatusNotice.className = 'text-[11px] sm:text-xs text-rose-700 font-bold px-4 py-1.5 rounded-full bg-rose-100 border border-rose-300 transition-all animate-pulse';
           }
 
-          // Shake board effect
           if (memoryBoard) {
             memoryBoard.classList.add('animate-shake');
           }
 
           setTimeout(() => {
-            // Úp tất cả các thẻ lại
             document.querySelectorAll('.memory-card').forEach(c => {
               c.classList.remove('is-flipped', 'is-matched');
             });
             if (memoryBoard) memoryBoard.classList.remove('animate-shake');
 
-            // Xáo trộn lại vị trí mới
             setTimeout(() => {
               initMemoryGame();
               if (gameStatusNotice) {
