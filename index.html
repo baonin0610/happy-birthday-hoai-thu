@@ -872,7 +872,7 @@
   <section id="gameView" class="hidden relative z-20 w-full max-w-2xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-24 overflow-x-hidden">
     
     <!-- ======================================================== -->
-    <!-- STAGE 1: THỬ THÁCH BÍ ẨN - LẬT THẺ TÌM 3 HÌNH GIỐNG NHAU -->
+    <!-- STAGE 1: THỬ THÁCH BÍ ẨN - TRUY TÌM VÉ HẸN HÒ DUY NHẤT    -->
     <!-- ======================================================== -->
     <div id="memoryGameStage" class="space-y-6">
       
@@ -883,44 +883,42 @@
           <span>Thử Thách Bí Ẩn 🔮</span>
         </div>
         <h2 class="text-3xl sm:text-4xl font-serif text-stone-800 leading-tight">
-          Giải Mã Hộp Quà Bí Ẩn ✨
+          Truy Tìm Vé Hẹn Hò VIP ✨
         </h2>
         <p class="text-stone-600 text-xs sm:text-sm mt-2 font-light max-w-md mx-auto leading-relaxed">
-          Thu hãy chạm mở các hộp quà để tìm ra <strong class="text-rose-600 font-semibold">3 hình giống nhau</strong> và mở khóa phần thưởng bí mật nhé! 🌸
+          Trong 6 hộp quà có <strong class="text-rose-600 font-semibold">đúng 1 Vé Hẹn Hò VIP</strong>! Thu có tối đa <strong>3 lượt mở</strong>. Nếu lật quá 3 lần mà chưa trúng, hộp quà sẽ tự xáo trộn lại nha! 🌸
         </p>
 
-        <!-- Progress Counter Badges (3 Vé Hẹn Hò & 3 Bánh Kem) -->
-        <div class="mt-4 flex items-center justify-center gap-3">
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-rose-200 shadow-xs text-xs font-medium text-stone-700">
-            <span>🎟️ Vé Hẹn Hò:</span>
-            <span id="ticketCountDisplay" class="font-bold text-rose-600 text-sm">0</span>
-            <span>/ 3</span>
+        <!-- Attempts Counter & Status Notice -->
+        <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/95 border border-rose-200 shadow-xs text-xs font-medium text-stone-700">
+            <span>🎟️ Lượt mở:</span>
+            <span id="triesCountDisplay" class="font-bold text-rose-600 text-sm">0</span>
+            <span>/ 3 lượt</span>
           </div>
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-amber-200 shadow-xs text-xs font-medium text-stone-700">
-            <span>🎂 Bánh Kem:</span>
-            <span id="cakeCountDisplay" class="font-bold text-amber-600 text-sm">0</span>
-            <span>/ 3</span>
+          <div id="gameStatusNotice" class="text-[11px] sm:text-xs text-stone-500 font-medium px-4 py-1.5 rounded-full bg-rose-50/70 border border-rose-100/80 transition-all">
+            ✨ Hãy chọn chiếc hộp Thu linh cảm tốt nhất
           </div>
         </div>
       </div>
 
       <!-- 6 Memory Cards Grid (3 columns x 2 rows) -->
-      <div id="memoryBoard" class="grid grid-cols-3 gap-3 sm:gap-4 max-w-md mx-auto p-4 sm:p-6 rounded-3xl bg-white/90 backdrop-blur-md border border-white shadow-floating">
+      <div id="memoryBoard" class="grid grid-cols-3 gap-3 sm:gap-4 max-w-md mx-auto p-4 sm:p-6 rounded-3xl bg-white/90 backdrop-blur-md border border-white shadow-floating transition-all duration-300">
         <!-- Rendered dynamically via JavaScript -->
       </div>
 
-      <!-- Victory Card (Appears after 3 matching items found) -->
+      <!-- Victory Card (Appears when ticket is found) -->
       <div id="memoryVictoryCard" class="hidden max-w-md mx-auto p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-rose-50 via-white to-amber-50 border-2 border-rose-300 shadow-floating text-center">
         <span class="text-4xl sm:text-5xl block mb-2">🎉</span>
         <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider font-sans">
           Thử Thách Hoàn Thành!
         </span>
         <h3 id="victoryTitle" class="font-serif text-2xl sm:text-3xl text-stone-800 mt-2 font-bold leading-tight">
-          Chúc Mừng Hoài Thu! 🌸
+          Tuyệt Vời! Thu Đã Tìm Trúng Vé Hẹn Hò VIP! 🎟️
         </h3>
         <p id="victorySubtitle" class="text-xs sm:text-sm text-stone-600 mt-2 max-w-sm mx-auto leading-relaxed font-light">
-          Thu đã xuất sắc tìm đủ 3 hình giống nhau và mở khóa thành công: <br/>
-          <strong class="font-bold text-rose-600 text-sm sm:text-base">1 Vé Hẹn Hò VIP Trọn Gói Cùng Người Bí Ẩn 🎟️✨</strong>
+          Chiếc vé hẹn hò bí mật duy nhất đã chính thức thuộc về Hoài Thu! <br/>
+          Người Bí Ẩn sẽ lo trọn gói 100% cho buổi đi chơi của Thu ✨
         </p>
         <div class="mt-6">
           <button type="button" id="startPlannerBtn" 
@@ -1888,52 +1886,55 @@
       if (navGameBtn) navGameBtn.addEventListener('click', showGameView);
 
       // ----------------------------------------------------
-      // 10. THỬ THÁCH BÍ ẨN: LẬT THẺ TÌM 3 HÌNH GIỐNG NHAU
+      // 10. THỬ THÁCH BÍ ẨN: TRUY TÌM VÉ HẸN HÒ DUY NHẤT
+      // (CHỈ CÓ ĐÚNG 1 VÉ - QUÁ 3 LƯỢT MÀ SAI SẼ XÁO TRỘN VÀ BẮT LẬT LẠI)
       // ----------------------------------------------------
       const memoryGameStage = document.getElementById('memoryGameStage');
       const plannerStage = document.getElementById('plannerStage');
       const memoryBoard = document.getElementById('memoryBoard');
-      const ticketCountDisplay = document.getElementById('ticketCountDisplay');
-      const cakeCountDisplay = document.getElementById('cakeCountDisplay');
+      const triesCountDisplay = document.getElementById('triesCountDisplay');
+      const gameStatusNotice = document.getElementById('gameStatusNotice');
       const memoryVictoryCard = document.getElementById('memoryVictoryCard');
-      const victoryTitle = document.getElementById('victoryTitle');
-      const victorySubtitle = document.getElementById('victorySubtitle');
       const startPlannerBtn = document.getElementById('startPlannerBtn');
       const replayMemoryGameBtn = document.getElementById('replayMemoryGameBtn');
 
       let isPlannerUnlocked = false;
-      let ticketCount = 0;
-      let cakeCount = 0;
-      let isGameOver = false;
+      let flipAttempts = 0;
+      let isBoardBusy = false;
+      let isGameWon = false;
 
-      // Exactly 3 Tickets and 3 Cakes = 6 Cards!
-      const MYSTERY_ITEMS = [
-        { type: 'ticket', icon: '🎟️', title: 'Vé Hẹn Hò VIP' },
-        { type: 'ticket', icon: '🎟️', title: 'Vé Hẹn Hò VIP' },
-        { type: 'ticket', icon: '🎟️', title: 'Vé Hẹn Hò VIP' },
-        { type: 'cake', icon: '🎂', title: 'Bánh Kem' },
-        { type: 'cake', icon: '🎂', title: 'Bánh Kem' },
-        { type: 'cake', icon: '🎂', title: 'Bánh Kem' }
+      // Exactly 1 Ticket + 5 Other Sweet Birthday Surprises = 6 Cards!
+      const SIX_SURPRISES = [
+        { type: 'ticket', icon: '🎟️', title: 'Vé Hẹn Hò VIP', isWinner: true },
+        { type: 'cake', icon: '🎂', title: 'Bánh Kem', isWinner: false },
+        { type: 'flower', icon: '🌷', title: 'Hoa Tulip', isWinner: false },
+        { type: 'boba', icon: '🧋', title: 'Ly Trà Sữa', isWinner: false },
+        { type: 'bear', icon: '🧸', title: 'Gấu Bông', isWinner: false },
+        { type: 'letter', icon: '💌', title: 'Thư Bí Mật', isWinner: false }
       ];
 
       function initMemoryGame() {
         if (!memoryBoard) return;
         memoryBoard.innerHTML = '';
-        ticketCount = 0;
-        cakeCount = 0;
-        isGameOver = false;
+        flipAttempts = 0;
+        isBoardBusy = false;
+        isGameWon = false;
 
-        if (ticketCountDisplay) ticketCountDisplay.textContent = '0';
-        if (cakeCountDisplay) cakeCountDisplay.textContent = '0';
+        if (triesCountDisplay) triesCountDisplay.textContent = '0';
+        if (gameStatusNotice) {
+          gameStatusNotice.innerHTML = '✨ Hãy chọn chiếc hộp Thu linh cảm tốt nhất';
+          gameStatusNotice.className = 'text-[11px] sm:text-xs text-stone-500 font-medium px-4 py-1.5 rounded-full bg-rose-50/70 border border-rose-100/80 transition-all';
+        }
         if (memoryVictoryCard) memoryVictoryCard.classList.add('hidden');
 
         // Shuffle with Fisher-Yates
-        const shuffled = [...MYSTERY_ITEMS].sort(() => Math.random() - 0.5);
+        const shuffled = [...SIX_SURPRISES].sort(() => Math.random() - 0.5);
 
         shuffled.forEach((item, index) => {
           const cardEl = document.createElement('div');
           cardEl.className = 'memory-card relative h-28 sm:h-36 rounded-2xl cursor-pointer';
           cardEl.dataset.type = item.type;
+          cardEl.dataset.winner = item.isWinner ? 'true' : 'false';
           cardEl.dataset.index = index;
 
           cardEl.innerHTML = `
@@ -1961,53 +1962,30 @@
       }
 
       function handleCardClick(card) {
-        if (isGameOver) return;
+        if (isBoardBusy || isGameWon) return;
         if (card.classList.contains('is-flipped')) return;
 
         // Flip card
         card.classList.add('is-flipped');
+        flipAttempts++;
+        if (triesCountDisplay) triesCountDisplay.textContent = flipAttempts;
 
-        // Playful mini confetti
-        confetti({
-          particleCount: 15,
-          spread: 40,
-          origin: { y: 0.65 },
-          colors: pastelColors
-        });
+        const isWinner = card.dataset.winner === 'true';
 
-        const type = card.dataset.type;
-        if (type === 'ticket') {
-          ticketCount++;
-          if (ticketCountDisplay) ticketCountDisplay.textContent = ticketCount;
-        } else if (type === 'cake') {
-          cakeCount++;
-          if (cakeCountDisplay) cakeCountDisplay.textContent = cakeCount;
-        }
-
-        // Check if 3 matching items found!
-        if (ticketCount === 3 || cakeCount === 3) {
-          isGameOver = true;
+        // 1. TRÚNG VÉ HẸN HÒ! (THẮNG)
+        if (isWinner) {
+          isGameWon = true;
           isPlannerUnlocked = true;
+          card.classList.add('is-matched');
 
-          // Highlight the 3 winning cards
-          const winningType = ticketCount === 3 ? 'ticket' : 'cake';
-          document.querySelectorAll(`.memory-card[data-type="${winningType}"]`).forEach(c => {
-            c.classList.add('is-matched');
-          });
+          if (gameStatusNotice) {
+            gameStatusNotice.innerHTML = '🎉 Chính xác! Đã tìm trúng Vé Hẹn Hò VIP!';
+            gameStatusNotice.className = 'text-[11px] sm:text-xs text-rose-700 font-bold px-4 py-1.5 rounded-full bg-rose-100 border border-rose-300 transition-all';
+          }
+
+          fireMassiveCelebration();
 
           setTimeout(() => {
-            fireMassiveCelebration();
-
-            if (victoryTitle && victorySubtitle) {
-              if (winningType === 'ticket') {
-                victoryTitle.textContent = 'Tuyệt Vời! Đủ 3 Vé Hẹn Hò 🎟️';
-                victorySubtitle.innerHTML = 'Thu đã xuất sắc lật trúng <strong class="font-bold text-rose-600">3 Vé Hẹn Hò VIP</strong> giống nhau!<br/>Hãy mở khóa vé và chọn lịch đi chơi cùng Người Bí Ẩn ngay nhé! ✨';
-              } else {
-                victoryTitle.textContent = 'Ngọt Ngào! Đủ 3 Bánh Kem 🎂';
-                victorySubtitle.innerHTML = 'Thu đã tìm thấy <strong class="font-bold text-amber-600">3 Bánh Kem Sinh Nhật</strong>!<br/>Người Bí Ẩn đặc cách tặng riêng Thu <strong class="text-rose-600 font-bold">1 Vé Hẹn Hò VIP</strong> để đi ăn mừng cùng nhau nhé! ✨';
-              }
-            }
-
             if (memoryVictoryCard) {
               memoryVictoryCard.classList.remove('hidden');
               if (window.gsap) {
@@ -2019,6 +1997,54 @@
               memoryVictoryCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
           }, 450);
+          return;
+        }
+
+        // 2. CHƯA TRÚNG VÉ
+        // Playful tiny confetti
+        confetti({
+          particleCount: 12,
+          spread: 35,
+          origin: { y: 0.65 },
+          colors: pastelColors
+        });
+
+        // Nếu còn lượt (< 3)
+        if (flipAttempts < 3) {
+          const remaining = 3 - flipAttempts;
+          if (gameStatusNotice) {
+            gameStatusNotice.innerHTML = `Chưa phải Vé Hẹn Hò rồi 🙈 Thu còn <strong>${remaining}</strong> lượt nữa nha! 🌸`;
+            gameStatusNotice.className = 'text-[11px] sm:text-xs text-amber-800 font-medium px-4 py-1.5 rounded-full bg-amber-50 border border-amber-200 transition-all';
+          }
+        } else {
+          // 3. ĐÃ LẬT QUÁ 3 CÁI MÀ SAI -> XÁO TRỘN VÀ BẮT LẬT LẠI!
+          isBoardBusy = true;
+          if (gameStatusNotice) {
+            gameStatusNotice.innerHTML = '🙈 Tiếc quá, 3 lượt chưa trúng rồi! Đang xáo trộn lại, Thu thử lại nha... ✨';
+            gameStatusNotice.className = 'text-[11px] sm:text-xs text-rose-700 font-bold px-4 py-1.5 rounded-full bg-rose-100 border border-rose-300 transition-all animate-pulse';
+          }
+
+          // Shake board effect
+          if (memoryBoard) {
+            memoryBoard.classList.add('animate-shake');
+          }
+
+          setTimeout(() => {
+            // Úp tất cả các thẻ lại
+            document.querySelectorAll('.memory-card').forEach(c => {
+              c.classList.remove('is-flipped', 'is-matched');
+            });
+            if (memoryBoard) memoryBoard.classList.remove('animate-shake');
+
+            // Xáo trộn lại vị trí mới
+            setTimeout(() => {
+              initMemoryGame();
+              if (gameStatusNotice) {
+                gameStatusNotice.innerHTML = '🔄 Đã xáo trộn xong! Thu hãy chọn lại 3 hộp quà mới nha 🌸';
+                gameStatusNotice.className = 'text-[11px] sm:text-xs text-stone-600 font-medium px-4 py-1.5 rounded-full bg-rose-50/80 border border-rose-200 transition-all';
+              }
+            }, 600);
+          }, 1100);
         }
       }
 
