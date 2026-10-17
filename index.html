@@ -320,50 +320,7 @@
 
     </div>
 
-    <!-- STEP 2: QUESTION CARD ("Thu đã có bạn trai hay chưa?") -->
-    <div id="questionCard" class="hidden relative max-w-sm w-full bg-white/95 backdrop-blur-md p-8 sm:p-10 rounded-3xl border border-white shadow-floating text-center select-none transition-all duration-500">
-      
-      <!-- Cute animated badge -->
-      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-pink-200 via-rose-100 to-amber-100 border border-rose-200/60 flex items-center justify-center text-3xl shadow-inner animate-bounce">
-        🙈
-      </div>
-
-      <span class="text-[11px] uppercase tracking-[0.2em] font-semibold text-rose-500 font-sans block mb-1">
-        Hỏi nhỏ Thu một chút
-      </span>
-      <h2 class="text-2xl sm:text-3xl font-serif text-stone-800 mb-2 leading-tight">
-        Thu đã có bạn trai hay chưa? 💕
-      </h2>
-      <p class="text-stone-500 text-xs leading-relaxed mb-8 font-light">
-        Trả lời thật lòng để mở cánh cửa bí mật nhé!
-      </p>
-
-      <!-- Interactive Buttons Container -->
-      <div class="relative min-h-[90px] flex items-center justify-center gap-4">
-        
-        <!-- YES Button: Runs away randomly! -->
-        <button type="button" id="btnYes" 
-          class="px-6 py-3 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 font-medium text-sm transition-all duration-150 shadow-xs border border-stone-200/80 cursor-pointer whitespace-nowrap z-20"
-          style="position: relative;">
-          Có rồi 🙈
-        </button>
-
-        <!-- NO Button: The only way through! -->
-        <button type="button" id="btnNo" 
-          class="px-6 py-3 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-medium text-sm tracking-wide shadow-lg shadow-rose-500/25 transition-all duration-300 active:scale-95 whitespace-nowrap z-10">
-          Chưa có nha 🌸
-        </button>
-
-      </div>
-
-      <!-- Playful hint underneath -->
-      <p id="dodgingHint" class="text-[11px] text-stone-400 mt-5 italic font-sans">
-        (Có vẻ như có một nút bấm không muốn bị chạm đâu nha 😝)
-      </p>
-
-    </div>
-
-    <!-- STEP 3: CHOOSE MODE CARD (Xuất hiện sau khi trả lời câu hỏi) -->
+    <!-- STEP 2: CHOOSE MODE CARD (Xuất hiện ngay sau khi nhập đúng mật khẩu 1710) -->
     <div id="chooseModeCard" class="hidden relative max-w-sm sm:max-w-md w-full bg-white/95 backdrop-blur-md p-6 sm:p-9 rounded-3xl border border-white shadow-floating text-center select-none transition-all duration-500">
       
       <!-- Crown / Gift Icon -->
@@ -1643,129 +1600,25 @@
       });
 
       // ----------------------------------------------------
-      // 9. PASSWORD GATEWAY (PIN: 1710) & FUN QUIZ STEP
+      // 9. PASSWORD GATEWAY (PIN: 1710) -> CHOOSE MODE CARD!
       // ----------------------------------------------------
       const CORRECT_PIN = '1710';
       const passwordOverlay = document.getElementById('passwordOverlay');
       const passwordCard = document.getElementById('passwordCard');
-      const questionCard = document.getElementById('questionCard');
+      const chooseModeCard = document.getElementById('chooseModeCard');
       const passwordError = document.getElementById('passwordError');
       const unlockBtn = document.getElementById('unlockBtn');
       const pinInputs = document.querySelectorAll('.pin-input');
-      const btnYes = document.getElementById('btnYes');
-      const btnNo = document.getElementById('btnNo');
-      const dodgingHint = document.getElementById('dodgingHint');
-
-      function getEnteredPin() {
-        return Array.from(pinInputs).map(inp => inp.value.trim()).join('');
-      }
-
-      // Step 2 Transition: From PIN -> Question Card
-      function goToQuestionStep() {
-        firePastelConfetti();
-
-        if (window.gsap) {
-          gsap.to(passwordCard, {
-            opacity: 0,
-            scale: 0.9,
-            duration: 0.35,
-            ease: 'power2.in',
-            onComplete: () => {
-              passwordCard.classList.add('hidden');
-              questionCard.classList.remove('hidden');
-              gsap.fromTo(questionCard, 
-                { opacity: 0, scale: 0.92, y: 20 },
-                { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'back.out(1.6)' }
-              );
-            }
-          });
-        } else {
-          passwordCard.classList.add('hidden');
-          questionCard.classList.remove('hidden');
-        }
-      }
-
-      function handlePinVerification() {
-        const pin = getEnteredPin();
-        if (pin === CORRECT_PIN) {
-          goToQuestionStep();
-        } else {
-          // Show error message
-          if (passwordError) passwordError.classList.remove('hidden');
-          
-          // Shake card effect
-          if (passwordCard) {
-            passwordCard.classList.remove('animate-shake');
-            void passwordCard.offsetWidth; // trigger reflow
-            passwordCard.classList.add('animate-shake');
-          }
-          
-          // Clear and highlight inputs with error color
-          pinInputs.forEach(inp => {
-            inp.value = '';
-            inp.classList.add('border-rose-400');
-          });
-          if (pinInputs[0]) pinInputs[0].focus();
-        }
-      }
-
-      // ----------------------------------------------------
-      // PLAYFUL DODGING BUTTON: "Có rồi 🙈"
-      // ----------------------------------------------------
-      const playfulTexts = [
-        'Có rồi 🙈',
-        'Hông cho bấm đâu 😝',
-        'Ủa nút này bị hư rồi 🤣',
-        'Bấm nhầm nút rùi nha!',
-        'Nút kia mới đúng nè 🌸',
-        'Đừng bấm mà 🙈',
-        'Chưa có mới qua được cơ 😜'
-      ];
-      let dodgeIndex = 0;
-
-      function dodgeButton(e) {
-        if (e) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-        dodgeIndex++;
-
-        // Calculate playful offsets within card boundaries
-        const maxOffset = 85;
-        const randomX = (Math.random() * 2 - 1) * maxOffset;
-        const randomY = (Math.random() * 2 - 1) * 65;
-
-        btnYes.style.transform = `translate(${randomX}px, ${randomY}px)`;
-        btnYes.textContent = playfulTexts[dodgeIndex % playfulTexts.length];
-
-        if (dodgingHint) {
-          dodgingHint.textContent = '(Ủa nút "Có rồi" biết né kìa, chọn nút "Chưa có" đi Thu ơi 🤣)';
-          dodgingHint.classList.add('text-rose-500');
-        }
-
-        // GSAP micro bounce
-        if (window.gsap) {
-          gsap.fromTo(btnYes, { scale: 0.88 }, { scale: 1, duration: 0.25, ease: 'back.out(2)' });
-        }
-      }
-
-      if (btnYes) {
-        btnYes.addEventListener('mouseenter', dodgeButton);
-        btnYes.addEventListener('touchstart', dodgeButton, { passive: false });
-        btnYes.addEventListener('pointerdown', dodgeButton);
-        btnYes.addEventListener('click', dodgeButton);
-      }
-
-      // ----------------------------------------------------
-      // RIGHT ANSWER BUTTON: "Chưa có nha 🌸" -> CHOOSE MODE!
-      // ----------------------------------------------------
-      const chooseModeCard = document.getElementById('chooseModeCard');
       const chooseWishesBtn = document.getElementById('chooseWishesBtn');
       const chooseGameBtn = document.getElementById('chooseGameBtn');
       const navWishesBtn = document.getElementById('navWishesBtn');
       const navGameBtn = document.getElementById('navGameBtn');
       const wishesView = document.getElementById('wishesView');
       const gameView = document.getElementById('gameView');
+
+      function getEnteredPin() {
+        return Array.from(pinInputs).map(inp => inp.value.trim()).join('');
+      }
 
       function startMusicIfAllowed() {
         if (!isPlaying && bgMusic) {
@@ -1812,35 +1665,53 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      if (btnNo) {
-        btnNo.addEventListener('click', () => {
-          btnNo.disabled = true;
-          btnNo.textContent = 'Chính xác! Đang mở... ✨';
-          
-          firePastelConfetti();
+      // Transition immediately from PIN -> Choose Mode Card!
+      function goToChooseModeStep() {
+        firePastelConfetti();
 
-          setTimeout(() => {
-            if (window.gsap && questionCard && chooseModeCard) {
-              gsap.to(questionCard, {
-                opacity: 0,
-                scale: 0.9,
-                duration: 0.35,
-                ease: 'power2.in',
-                onComplete: () => {
-                  questionCard.classList.add('hidden');
-                  chooseModeCard.classList.remove('hidden');
-                  gsap.fromTo(chooseModeCard, 
-                    { opacity: 0, scale: 0.92, y: 20 },
-                    { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'back.out(1.5)' }
-                  );
-                }
-              });
-            } else {
-              if (questionCard) questionCard.classList.add('hidden');
-              if (chooseModeCard) chooseModeCard.classList.remove('hidden');
+        if (window.gsap && passwordCard && chooseModeCard) {
+          gsap.to(passwordCard, {
+            opacity: 0,
+            scale: 0.9,
+            duration: 0.35,
+            ease: 'power2.in',
+            onComplete: () => {
+              passwordCard.classList.add('hidden');
+              chooseModeCard.classList.remove('hidden');
+              gsap.fromTo(chooseModeCard, 
+                { opacity: 0, scale: 0.92, y: 20 },
+                { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'back.out(1.5)' }
+              );
             }
-          }, 400);
-        });
+          });
+        } else {
+          if (passwordCard) passwordCard.classList.add('hidden');
+          if (chooseModeCard) chooseModeCard.classList.remove('hidden');
+        }
+      }
+
+      function handlePinVerification() {
+        const pin = getEnteredPin();
+        if (pin === CORRECT_PIN) {
+          goToChooseModeStep();
+        } else {
+          // Show error message
+          if (passwordError) passwordError.classList.remove('hidden');
+          
+          // Shake card effect
+          if (passwordCard) {
+            passwordCard.classList.remove('animate-shake');
+            void passwordCard.offsetWidth; // trigger reflow
+            passwordCard.classList.add('animate-shake');
+          }
+          
+          // Clear and highlight inputs with error color
+          pinInputs.forEach(inp => {
+            inp.value = '';
+            inp.classList.add('border-rose-400');
+          });
+          if (pinInputs[0]) pinInputs[0].focus();
+        }
       }
 
       // Choice Card Buttons
