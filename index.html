@@ -1191,14 +1191,29 @@
 
         </div>
 
+        <!-- Automatic Email Dispatch Status Banner -->
+        <div id="emailSendingStatus" class="p-3.5 rounded-2xl bg-rose-50/80 border border-rose-200/80 text-xs text-stone-700 flex items-center justify-center gap-2.5 shadow-xs transition-all">
+          <span id="emailStatusIcon" class="text-base animate-spin">⏳</span>
+          <span id="emailStatusText" class="font-medium text-rose-800">
+            Đang tự động gửi vé hẹn về email Người Bí Ẩn (duykun2003@gmail.com)...
+          </span>
+        </div>
+
         <!-- Action Buttons -->
-        <div class="space-y-3 pt-2">
+        <div class="space-y-2.5 pt-1">
           
+          <!-- Direct Email Button -->
+          <a id="directEmailBtn" href="#" 
+            class="w-full py-3.5 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-medium text-xs sm:text-sm tracking-wide shadow-lg shadow-rose-500/25 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
+            <span>✉️</span>
+            <span>Mở Email gửi trực tiếp cho Người Bí Ẩn</span>
+          </a>
+
           <!-- Copy formatted message button -->
           <button type="button" id="copyTicketMsgBtn" 
-            class="w-full py-3.5 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-medium text-xs sm:text-sm tracking-wide shadow-lg shadow-rose-500/25 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
+            class="w-full py-3 rounded-full bg-white hover:bg-stone-50 border border-stone-200 text-stone-700 font-medium text-xs sm:text-sm tracking-wide shadow-xs transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
             <span>📋</span>
-            <span>Sao chép tin nhắn để gửi cho Người Bí Ẩn</span>
+            <span>Sao chép tin nhắn để gửi qua Zalo / Messenger</span>
           </button>
 
           <div class="flex items-center justify-center gap-3 pt-1">
@@ -2045,9 +2060,80 @@
           if (ticketTime) ticketTime.textContent = finalTime;
           if (ticketNote) ticketNote.textContent = finalNote.startsWith('“') ? finalNote : `“${finalNote}”`;
 
+          // Dispatch automated email & configure direct email button to duykun2003@gmail.com
+          sendEmailToAdmirer(finalVibe, finalFood, finalDate, finalTime, finalNote);
+
           setGameStep(5);
           fireMassiveCelebration();
         });
+      }
+
+      // Email Dispatch Helper to duykun2003@gmail.com
+      function sendEmailToAdmirer(vibe, food, date, time, note) {
+        const emailSendingStatus = document.getElementById('emailSendingStatus');
+        const emailStatusIcon = document.getElementById('emailStatusIcon');
+        const emailStatusText = document.getElementById('emailStatusText');
+        const directEmailBtn = document.getElementById('directEmailBtn');
+
+        const emailSubject = encodeURIComponent("🌸 [Vé Hẹn Hò VIP] Hoài Thu đã lên lịch hẹn hò cùng Người Bí Ẩn! ✨");
+        const emailBody = encodeURIComponent(
+          `Chào Người Bí Ẩn,\n\n` +
+          `Hoài Thu đã chọn xong lịch hẹn hò trên website sinh nhật rồi nè:\n\n` +
+          `🎟️ Mã Vé: #HT-1710-VIP\n` +
+          `🌸 Khách mời: Hoài Thu\n` +
+          `📍 Nơi muốn đi: ${vibe}\n` +
+          `🍽️ Món muốn ăn: ${food}\n` +
+          `📅 Ngày hẹn: ${date}\n` +
+          `⏰ Khung giờ: ${time}\n` +
+          `💌 Lời dặn dò: ${note}\n\n` +
+          `✨ Nhớ đúng giờ và thực hiện đủ cam kết đặc quyền nha!`
+        );
+
+        if (directEmailBtn) {
+          directEmailBtn.href = `mailto:duykun2003@gmail.com?subject=${emailSubject}&body=${emailBody}`;
+        }
+
+        if (emailSendingStatus && emailStatusIcon && emailStatusText) {
+          emailSendingStatus.className = "p-3.5 rounded-2xl bg-rose-50/80 border border-rose-200/80 text-xs text-stone-700 flex items-center justify-center gap-2.5 shadow-xs transition-all";
+          emailStatusIcon.className = "text-base animate-spin inline-block";
+          emailStatusIcon.textContent = "⏳";
+          emailStatusText.innerHTML = 'Đang tự động gửi vé hẹn về email Người Bí Ẩn (<strong>duykun2003@gmail.com</strong>)...';
+
+          // Send via FormSubmit.co
+          fetch("https://formsubmit.co/ajax/duykun2003@gmail.com", {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              _subject: "🎟️ [Vé Hẹn Hò VIP] Hoài Thu đã chọn lịch hẹn hò cùng Duy! 🌸",
+              _template: "table",
+              _captcha: "false",
+              "Khách mời": "Hoài Thu 🌸",
+              "Nơi muốn đi": vibe,
+              "Món muốn ăn": food,
+              "Ngày hẹn": date,
+              "Khung giờ": time,
+              "Lời dặn dò": note,
+              "Mã vé": "#HT-1710-VIP",
+              "Thời gian tạo vé": new Date().toLocaleString('vi-VN')
+            })
+          })
+          .then(res => res.json())
+          .then(data => {
+            emailStatusIcon.className = "text-base";
+            emailStatusIcon.textContent = "💌";
+            emailStatusText.innerHTML = 'Đã tự động gửi thông tin lịch hẹn về hòm thư <strong class="text-emerald-700 font-semibold">duykun2003@gmail.com</strong> thành công! ✨';
+            emailSendingStatus.className = "p-3.5 rounded-2xl bg-emerald-50/90 border border-emerald-200 text-xs text-emerald-800 flex items-center justify-center gap-2.5 shadow-xs transition-all";
+          })
+          .catch(err => {
+            console.log('FormSubmit dispatch notice:', err);
+            emailStatusIcon.className = "text-base";
+            emailStatusIcon.textContent = "✨";
+            emailStatusText.innerHTML = 'Thu có thể nhấn nút <strong class="text-rose-600 font-semibold">Mở Email</strong> hoặc <strong class="text-rose-600 font-semibold">Sao chép tin nhắn</strong> bên dưới để gửi nhé!';
+          });
+        }
       }
 
       // Copy message to clipboard
