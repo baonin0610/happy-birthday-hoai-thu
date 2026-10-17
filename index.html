@@ -363,6 +363,68 @@
 
     </div>
 
+    <!-- STEP 3: CHOOSE MODE CARD (Xuất hiện sau khi trả lời câu hỏi) -->
+    <div id="chooseModeCard" class="hidden relative max-w-sm sm:max-w-md w-full bg-white/95 backdrop-blur-md p-6 sm:p-9 rounded-3xl border border-white shadow-floating text-center select-none transition-all duration-500">
+      
+      <!-- Crown / Gift Icon -->
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-rose-200 via-rose-100 to-amber-100 border border-rose-200/60 flex items-center justify-center text-3xl shadow-inner animate-pulse-subtle">
+        🎁
+      </div>
+
+      <span class="text-[11px] uppercase tracking-[0.2em] font-semibold text-rose-500 font-sans block mb-1">
+        Món quà đã được mở khóa ✨
+      </span>
+      <h2 class="text-2xl sm:text-3xl font-serif text-stone-800 mb-2 leading-tight">
+        Thu muốn trải nghiệm điều gì trước? 🌸
+      </h2>
+      <p class="text-stone-500 text-xs leading-relaxed mb-6 font-light">
+        Người Bí Ẩn đã chuẩn bị 2 phần quà đặc biệt dành riêng cho Thu hôm nay:
+      </p>
+
+      <!-- 2 Main Choice Cards -->
+      <div class="space-y-3 text-left">
+        
+        <!-- Button 1: Vào lời chúc sinh nhật -->
+        <button type="button" id="chooseWishesBtn" 
+          class="w-full group p-4 rounded-2xl border-2 border-rose-100/90 bg-rose-50/50 hover:bg-white hover:border-rose-400 transition-all duration-300 hover:shadow-soft-card flex items-center gap-3.5 text-left active:scale-[0.98]">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-rose-400 to-rose-500 text-white flex items-center justify-center text-2xl shadow-sm shrink-0 group-hover:scale-105 transition-transform">
+            💌
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="font-serif text-base sm:text-lg text-stone-800 font-semibold group-hover:text-rose-600 transition-colors">
+              1. Lời chúc sinh nhật dịu dàng
+            </h3>
+            <p class="text-[11px] text-stone-500 mt-0.5 line-clamp-1">
+              Thư gửi riêng Thu, thổi nến sinh nhật & góc kỷ niệm 🌸
+            </p>
+          </div>
+          <span class="text-stone-400 group-hover:text-rose-500 group-hover:translate-x-1 transition-all text-sm shrink-0">➔</span>
+        </button>
+
+        <!-- Button 2: Vào mini-game hẹn hò -->
+        <button type="button" id="chooseGameBtn" 
+          class="w-full group p-4 rounded-2xl border-2 border-amber-200/90 bg-gradient-to-r from-amber-50/60 to-rose-50/60 hover:bg-white hover:border-amber-400 transition-all duration-300 hover:shadow-soft-card flex items-center gap-3.5 text-left active:scale-[0.98]">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-400 via-rose-400 to-rose-500 text-white flex items-center justify-center text-2xl shadow-sm shrink-0 group-hover:scale-105 transition-transform">
+            🎟️
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5">
+              <h3 class="font-serif text-base sm:text-lg text-stone-800 font-semibold group-hover:text-rose-600 transition-colors">
+                2. Mini-game: Lên lịch hẹn hò
+              </h3>
+              <span class="px-2 py-0.5 rounded-full bg-rose-500 text-white text-[9px] font-sans font-bold uppercase tracking-wider">Mới</span>
+            </div>
+            <p class="text-[11px] text-stone-500 mt-0.5 line-clamp-1">
+              Chọn ngày giờ rảnh, món ngon & đi chơi cùng Người Bí Ẩn ✨
+            </p>
+          </div>
+          <span class="text-stone-400 group-hover:text-rose-500 group-hover:translate-x-1 transition-all text-sm shrink-0">➔</span>
+        </button>
+
+      </div>
+
+    </div>
+
   </div>
 
   <!-- ========================================== -->
@@ -376,6 +438,24 @@
 
   <!-- HTML5 Canvas: Floating Petals & Stardust -->
   <canvas id="petalCanvas"></canvas>
+
+  <!-- ========================================== -->
+  <!-- TOP NAVIGATION TABS (Lời Chúc / Hẹn Hò)    -->
+  <!-- ========================================== -->
+  <div id="topNavDock" class="fixed top-4 left-4 sm:top-7 sm:left-7 z-50">
+    <div class="flex items-center gap-1 p-1 rounded-full bg-white/85 backdrop-blur-md border border-white/80 shadow-soft-card">
+      <button id="navWishesBtn" type="button" 
+        class="px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 bg-rose-500 text-white shadow-xs" 
+        title="Xem lời chúc sinh nhật">
+        <span>💌 Lời chúc</span>
+      </button>
+      <button id="navGameBtn" type="button" 
+        class="px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 text-stone-600 hover:text-rose-600" 
+        title="Chơi minigame lên lịch hẹn hò">
+        <span>🎟️ Lên lịch hẹn</span>
+      </button>
+    </div>
+  </div>
 
   <!-- ========================================== -->
   <!-- FLOATING MUSIC CONTROLLER                  -->
@@ -414,9 +494,9 @@
   </audio>
 
   <!-- ========================================== -->
-  <!-- MAIN CONTAINER                             -->
+  <!-- MAIN CONTAINER: WISHES VIEW                -->
   <!-- ========================================== -->
-  <main class="relative z-20 w-full max-w-5xl mx-auto px-4 sm:px-8 pt-16 sm:pt-28 pb-24 overflow-x-hidden">
+  <main id="wishesView" class="relative z-20 w-full max-w-5xl mx-auto px-4 sm:px-8 pt-16 sm:pt-28 pb-24 overflow-x-hidden">
 
     <!-- ======================================== -->
     <!-- 1. HERO SECTION                          -->
@@ -763,6 +843,390 @@
     </section>
 
   </main>
+
+  <!-- ======================================================== -->
+  <!-- 2. GAME VIEW: DATE PLANNER MINI-GAME                    -->
+  <!-- ======================================================== -->
+  <section id="gameView" class="hidden relative z-20 w-full max-w-2xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-24 overflow-x-hidden">
+    
+    <!-- Game Header -->
+    <div class="text-center max-w-lg mx-auto mb-8 sm:mb-10">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100/70 border border-amber-200/80 backdrop-blur-sm text-xs font-medium text-amber-800 mb-3 shadow-xs">
+        <span class="inline-block w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+        <span>Mini-Game: Vé Hẹn Hò Bí Mật 🎟️</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-serif text-stone-800 leading-tight">
+        Lên Kèo Đi Chơi Cùng Người Bí Ẩn ✨
+      </h2>
+      <p class="text-stone-600 text-xs sm:text-sm mt-2 font-light max-w-md mx-auto leading-relaxed">
+        Thu cứ thoải mái chọn ngày giờ & địa điểm mình thích nhé, phần chuẩn bị và bao trọn gói cứ để Người Bí Ẩn lo! 🌸
+      </p>
+
+      <!-- Step Indicators (1 - 2 - 3 - 4) -->
+      <div class="mt-6 flex items-center justify-center gap-2 sm:gap-3 max-w-xs mx-auto">
+        <div id="stepDot1" class="flex-1 h-1.5 rounded-full bg-rose-500 transition-all duration-300"></div>
+        <div id="stepDot2" class="flex-1 h-1.5 rounded-full bg-stone-200 transition-all duration-300"></div>
+        <div id="stepDot3" class="flex-1 h-1.5 rounded-full bg-stone-200 transition-all duration-300"></div>
+        <div id="stepDot4" class="flex-1 h-1.5 rounded-full bg-stone-200 transition-all duration-300"></div>
+      </div>
+    </div>
+
+    <!-- Container for Game Steps -->
+    <div class="relative bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-9 border border-white shadow-floating">
+      
+      <!-- ================= STEP 1: CHỌN ĐỊA ĐIỂM / VIBE ================= -->
+      <div id="gameStep1" class="game-step space-y-6">
+        <div class="border-b border-rose-100 pb-3">
+          <span class="text-xs uppercase tracking-wider font-semibold text-rose-500">Bước 1 / 4</span>
+          <h3 class="font-serif text-xl sm:text-2xl text-stone-800 mt-0.5">
+            Thu thích buổi hẹn có vibe như thế nào nè? 🎡
+          </h3>
+          <p class="text-xs text-stone-500 mt-1">Chọn một gợi ý Thu thấy thích nhất hoặc tự ghi điểm đến nha:</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="vibeOptionsList">
+          <button type="button" class="vibe-card p-3.5 rounded-2xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 hover:bg-rose-50/30 transition-all text-left flex items-start gap-3 active:scale-[0.98]" data-value="Cafe ngắm hoàng hôn chill chill ☕">
+            <span class="text-2xl shrink-0">☕</span>
+            <div>
+              <p class="font-semibold text-stone-800 text-sm">Cafe view hoàng hôn</p>
+              <p class="text-[11px] text-stone-500 mt-0.5">Uống nước ngon, ngắm cảnh & trò chuyện</p>
+            </div>
+          </button>
+
+          <button type="button" class="vibe-card p-3.5 rounded-2xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 hover:bg-rose-50/30 transition-all text-left flex items-start gap-3 active:scale-[0.98]" data-value="Đi xem phim & ăn bắp rang 🎬">
+            <span class="text-2xl shrink-0">🎬</span>
+            <div>
+              <p class="font-semibold text-stone-800 text-sm">Xem phim rạp</p>
+              <p class="text-[11px] text-stone-500 mt-0.5">Cùng nhau xem một bộ phim thật hay</p>
+            </div>
+          </button>
+
+          <button type="button" class="vibe-card p-3.5 rounded-2xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 hover:bg-rose-50/30 transition-all text-left flex items-start gap-3 active:scale-[0.98]" data-value="Food tour ăn sập phố xá 🍲">
+            <span class="text-2xl shrink-0">🍲</span>
+            <div>
+              <p class="font-semibold text-stone-800 text-sm">Food tour phố xá</p>
+              <p class="text-[11px] text-stone-500 mt-0.5">Càn quét tất tần tật các món ngon Thu thích</p>
+            </div>
+          </button>
+
+          <button type="button" class="vibe-card p-3.5 rounded-2xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 hover:bg-rose-50/30 transition-all text-left flex items-start gap-3 active:scale-[0.98]" data-value="Lượn phố đêm hóng gió & chụp ảnh xinh 🎡">
+            <span class="text-2xl shrink-0">🎡</span>
+            <div>
+              <p class="font-semibold text-stone-800 text-sm">Lượn phố đêm hóng gió</p>
+              <p class="text-[11px] text-stone-500 mt-0.5">Ngắm thành phố & có phó nháy chụp ảnh cho Thu</p>
+            </div>
+          </button>
+        </div>
+
+        <!-- Custom Input -->
+        <div class="pt-1">
+          <label class="block text-xs font-medium text-stone-600 mb-1.5">Hoặc địa điểm cụ thể Thu muốn đi:</label>
+          <input type="text" id="customVibeInput" placeholder="Ví dụ: Đi bảo tàng, đi dạo biển, đi picnic công viên..." class="w-full px-4 py-2.5 rounded-xl border border-stone-200 bg-stone-50/60 focus:bg-white focus:border-rose-400 focus:ring-2 focus:ring-rose-200/50 text-xs sm:text-sm outline-none transition-all">
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="pt-4 flex justify-end">
+          <button type="button" id="nextToStep2Btn" class="px-6 py-3 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-medium text-xs sm:text-sm shadow-md shadow-rose-500/20 transition-all active:scale-95 flex items-center gap-1.5">
+            <span>Tiếp tục: Chọn món ăn</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= STEP 2: CHỌN MÓN ĂN ================= -->
+      <div id="gameStep2" class="game-step hidden space-y-6">
+        <div class="border-b border-rose-100 pb-3">
+          <span class="text-xs uppercase tracking-wider font-semibold text-rose-500">Bước 2 / 4</span>
+          <h3 class="font-serif text-xl sm:text-2xl text-stone-800 mt-0.5">
+            Hôm đó Thu muốn thưởng thức món gì nè? 🍽️
+          </h3>
+          <p class="text-xs text-stone-500 mt-1">Thu thích ăn món nào nhất trong số này:</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="foodOptionsList">
+          <button type="button" class="food-card p-3.5 rounded-2xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 hover:bg-rose-50/30 transition-all text-left flex items-start gap-3 active:scale-[0.98]" data-value="Sushi & Đồ Nhật tươi ngon 🍣">
+            <span class="text-2xl shrink-0">🍣</span>
+            <div>
+              <p class="font-semibold text-stone-800 text-sm">Sushi & Đồ Nhật</p>
+              <p class="text-[11px] text-stone-500 mt-0.5">Thanh đạm, tươi ngon, tinh tế</p>
+            </div>
+          </button>
+
+          <button type="button" class="food-card p-3.5 rounded-2xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 hover:bg-rose-50/30 transition-all text-left flex items-start gap-3 active:scale-[0.98]" data-value="Thịt nướng BBQ xèo xèo ấm cúng 🥩">
+            <span class="text-2xl shrink-0">🥩</span>
+            <div>
+              <p class="font-semibold text-stone-800 text-sm">Thịt nướng BBQ</p>
+              <p class="text-[11px] text-stone-500 mt-0.5">Nóng hổi, đậm vị, ấm cúng</p>
+            </div>
+          </button>
+
+          <button type="button" class="food-card p-3.5 rounded-2xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 hover:bg-rose-50/30 transition-all text-left flex items-start gap-3 active:scale-[0.98]" data-value="Mì Ý & Pizza chuẩn phong cách 🍝">
+            <span class="text-2xl shrink-0">🍝</span>
+            <div>
+              <p class="font-semibold text-stone-800 text-sm">Mì Ý & Pizza</p>
+              <p class="text-[11px] text-stone-500 mt-0.5">Vibe lãng mạn, nhẹ nhàng</p>
+            </div>
+          </button>
+
+          <button type="button" class="food-card p-3.5 rounded-2xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 hover:bg-rose-50/30 transition-all text-left flex items-start gap-3 active:scale-[0.98]" data-value="Lẩu nóng hổi xì xụp trò chuyện 🍲">
+            <span class="text-2xl shrink-0">🍲</span>
+            <div>
+              <p class="font-semibold text-stone-800 text-sm">Nồi lẩu nóng hổi</p>
+              <p class="text-[11px] text-stone-500 mt-0.5">Vừa ăn vừa rôm rả tâm sự</p>
+            </div>
+          </button>
+
+          <button type="button" class="food-card p-3.5 rounded-2xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 hover:bg-rose-50/30 transition-all text-left flex items-start gap-3 active:scale-[0.98] sm:col-span-2" data-value="Bánh ngọt tráng miệng & Trà sữa ngọt ngào 🧋">
+            <span class="text-2xl shrink-0">🧋</span>
+            <div>
+              <p class="font-semibold text-stone-800 text-sm">Trà sữa & Bánh ngọt</p>
+              <p class="text-[11px] text-stone-500 mt-0.5">Nạp chút vị ngọt ngào cho ngày hẹn thêm xinh</p>
+            </div>
+          </button>
+        </div>
+
+        <!-- Custom Input -->
+        <div class="pt-1">
+          <label class="block text-xs font-medium text-stone-600 mb-1.5">Hoặc món đặc biệt Thu đang thèm bấy lâu:</label>
+          <input type="text" id="customFoodInput" placeholder="Ví dụ: Bún đậu mắm tôm, hải sản, ốc nướng..." class="w-full px-4 py-2.5 rounded-xl border border-stone-200 bg-stone-50/60 focus:bg-white focus:border-rose-400 focus:ring-2 focus:ring-rose-200/50 text-xs sm:text-sm outline-none transition-all">
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="pt-4 flex items-center justify-between gap-3">
+          <button type="button" id="backToStep1Btn" class="px-5 py-2.5 rounded-full border border-stone-300 text-stone-600 text-xs font-medium hover:bg-stone-100 transition-all active:scale-95">
+            ⬅ Quay lại
+          </button>
+          <button type="button" id="nextToStep3Btn" class="px-6 py-3 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-medium text-xs sm:text-sm shadow-md shadow-rose-500/20 transition-all active:scale-95 flex items-center gap-1.5">
+            <span>Tiếp tục: Chọn ngày & giờ</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= STEP 3: CHỌN NGÀY & GIỜ RẢNH ================= -->
+      <div id="gameStep3" class="game-step hidden space-y-6">
+        <div class="border-b border-rose-100 pb-3">
+          <span class="text-xs uppercase tracking-wider font-semibold text-rose-500">Bước 3 / 4</span>
+          <h3 class="font-serif text-xl sm:text-2xl text-stone-800 mt-0.5">
+            Thu rảnh vào ngày nào & khung giờ nào nhất? ⏰
+          </h3>
+          <p class="text-xs text-stone-500 mt-1">Người Bí Ẩn sẽ tự sắp xếp theo đúng lịch của Thu:</p>
+        </div>
+
+        <!-- Chọn ngày -->
+        <div>
+          <label class="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-2">1. Chọn ngày thuận tiện:</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="dateQuickOptions">
+            <button type="button" class="date-card p-3 rounded-xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 transition-all text-left text-xs sm:text-sm font-medium text-stone-700" data-value="Cuối tuần này (Thứ 7 hoặc Chủ Nhật) 🌸">
+              🌸 Cuối tuần này (Thứ 7 hoặc Chủ Nhật)
+            </button>
+            <button type="button" class="date-card p-3 rounded-xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 transition-all text-left text-xs sm:text-sm font-medium text-stone-700" data-value="Một buổi tối trong tuần sau 🌼">
+              🌼 Một buổi tối thảnh thơi tuần sau
+            </button>
+          </div>
+          <div class="mt-2.5">
+            <span class="text-[11px] text-stone-400 block mb-1">Hoặc chọn một ngày cụ thể trên lịch:</span>
+            <input type="date" id="specificDateInput" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 bg-stone-50/60 focus:bg-white focus:border-rose-400 text-xs sm:text-sm text-stone-700 outline-none">
+          </div>
+        </div>
+
+        <!-- Chọn khung giờ -->
+        <div class="pt-2">
+          <label class="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-2">2. Khung giờ lý tưởng:</label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="timeQuickOptions">
+            <button type="button" class="time-card p-3 rounded-xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 transition-all text-left text-xs font-medium text-stone-700" data-value="Buổi sáng thảnh thơi (09:00 - 12:00)">
+              🌅 Sáng (09h - 12h)
+            </button>
+            <button type="button" class="time-card p-3 rounded-xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 transition-all text-left text-xs font-medium text-stone-700" data-value="Chiều hoàng hôn êm ả (15:00 - 18:00)">
+              ☕ Chiều (15h - 18h)
+            </button>
+            <button type="button" class="time-card p-3 rounded-xl border-2 border-stone-200/70 bg-stone-50/50 hover:border-rose-300 transition-all text-left text-xs font-medium text-stone-700" data-value="Buổi tối lung linh (18:30 - 21:30)">
+              🌙 Tối (18h30 - 21h30)
+            </button>
+          </div>
+          <div class="mt-2.5">
+            <input type="text" id="customTimeInput" placeholder="Hoặc giờ Thu muốn: Ví dụ 19h15..." class="w-full px-4 py-2 rounded-xl border border-stone-200 bg-stone-50/60 focus:bg-white focus:border-rose-400 text-xs text-stone-700 outline-none">
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="pt-4 flex items-center justify-between gap-3">
+          <button type="button" id="backToStep2Btn" class="px-5 py-2.5 rounded-full border border-stone-300 text-stone-600 text-xs font-medium hover:bg-stone-100 transition-all active:scale-95">
+            ⬅ Quay lại
+          </button>
+          <button type="button" id="nextToStep4Btn" class="px-6 py-3 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-medium text-xs sm:text-sm shadow-md shadow-rose-500/20 transition-all active:scale-95 flex items-center gap-1.5">
+            <span>Tiếp tục: Xem cam kết</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= STEP 4: CAM KẾT & LỜI NHẮN ================= -->
+      <div id="gameStep4" class="game-step hidden space-y-6">
+        <div class="border-b border-rose-100 pb-3">
+          <span class="text-xs uppercase tracking-wider font-semibold text-rose-500">Bước 4 / 4</span>
+          <h3 class="font-serif text-xl sm:text-2xl text-stone-800 mt-0.5">
+            Cam kết đặc quyền & Lời dặn dò ✨
+          </h3>
+          <p class="text-xs text-stone-500 mt-1">Các điều khoản này có hiệu lực vô thời hạn dành riêng cho Thu:</p>
+        </div>
+
+        <!-- Special Perks (Checklist) -->
+        <div class="space-y-2.5 p-4 rounded-2xl bg-rose-50/60 border border-rose-100 text-xs sm:text-[13px] text-stone-700">
+          <label class="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" checked disabled class="accent-rose-500 w-4 h-4 rounded">
+            <span>🛵 Người Bí Ẩn đưa đón Thu tận nơi an toàn & chu đáo</span>
+          </label>
+          <label class="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" checked disabled class="accent-rose-500 w-4 h-4 rounded">
+            <span>💳 Người Bí Ẩn bao trọn 100% chi phí buổi đi chơi</span>
+          </label>
+          <label class="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" checked disabled class="accent-rose-500 w-4 h-4 rounded">
+            <span>📸 Nhiệt tình làm phó nháy chụp 1001 bức ảnh sống ảo cho Thu</span>
+          </label>
+          <label class="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" checked disabled class="accent-rose-500 w-4 h-4 rounded">
+            <span>🌸 Thu chỉ cần mang theo một nụ cười thật tươi là được</span>
+          </label>
+        </div>
+
+        <!-- Custom message for secret admirer -->
+        <div>
+          <label class="block text-xs font-medium text-stone-700 mb-1.5">Thu có muốn dặn dò gì thêm cho Người Bí Ẩn không nè?</label>
+          <textarea id="gameCustomNote" rows="3" placeholder="Ví dụ: Nhớ đúng giờ nha, Thu ăn ít cay nhé, hoặc nhớ chọn quán yên tĩnh một xíu..." class="w-full px-4 py-2.5 rounded-xl border border-stone-200 bg-stone-50/60 focus:bg-white focus:border-rose-400 focus:ring-2 focus:ring-rose-200/50 text-xs sm:text-sm outline-none transition-all resize-none"></textarea>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="pt-4 flex items-center justify-between gap-3">
+          <button type="button" id="backToStep3Btn" class="px-5 py-2.5 rounded-full border border-stone-300 text-stone-600 text-xs font-medium hover:bg-stone-100 transition-all active:scale-95">
+            ⬅ Quay lại
+          </button>
+          <button type="button" id="generateTicketBtn" class="px-7 py-3.5 rounded-full bg-gradient-to-r from-amber-500 via-rose-500 to-rose-600 hover:from-amber-600 hover:to-rose-700 text-white font-medium text-xs sm:text-sm shadow-lg shadow-rose-500/25 transition-all active:scale-95 flex items-center gap-2">
+            <span>🎉 Xuất Vé Hẹn Hò & Gửi Tín Hiệu</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= FINAL STEP: CHIẾC VÉ HẸN HÒ VIP ================= -->
+      <div id="gameTicketResult" class="game-step hidden space-y-6">
+        
+        <div class="text-center">
+          <span class="text-3xl block mb-1">🎉</span>
+          <span class="text-xs uppercase tracking-widest font-semibold text-rose-500 font-sans">Date Pass Confirmed</span>
+          <h3 class="font-serif text-2xl sm:text-3xl text-stone-800 mt-1">
+            Vé Hẹn Hò Đã Sẵn Sàng! 🎟️
+          </h3>
+          <p class="text-stone-500 text-xs mt-1">
+            Chiếc vé độc quyền này đã được kích hoạt thành công cho Hoài Thu.
+          </p>
+        </div>
+
+        <!-- THE GOLDEN BOARDING PASS TICKET -->
+        <div class="relative bg-gradient-to-br from-[#fffaf7] via-white to-[#fff5f2] rounded-3xl p-6 sm:p-8 border-2 border-rose-200/80 shadow-floating overflow-hidden select-none">
+          
+          <!-- Decorative Top Ticket Cutouts -->
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-[#fdfbf9] border border-rose-200/80"></div>
+          
+          <!-- Ticket Header -->
+          <div class="flex items-center justify-between border-b-2 border-dashed border-rose-200 pb-4 mb-5">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">🎟️</span>
+              <div>
+                <p class="font-serif text-base sm:text-lg font-bold text-stone-800 tracking-wide">SPECIAL DATE PASS</p>
+                <p class="text-[9px] uppercase tracking-widest font-semibold text-rose-500 font-sans">Hạng Thương Gia • First Class</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="px-2.5 py-1 rounded-full bg-rose-100 text-rose-700 font-mono text-[10px] font-bold">
+                #HT-1710-VIP
+              </span>
+            </div>
+          </div>
+
+          <!-- Ticket Details Grid -->
+          <div class="grid grid-cols-2 gap-4 text-left text-xs sm:text-sm">
+            <div>
+              <p class="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">Khách mời danh dự</p>
+              <p class="font-serif font-bold text-rose-600 text-base sm:text-lg mt-0.5">Hoài Thu 🌸</p>
+            </div>
+            <div>
+              <p class="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">Người đồng hành</p>
+              <p class="font-serif font-bold text-stone-800 text-base sm:text-lg mt-0.5">Người Bí Ẩn ✨</p>
+            </div>
+
+            <div class="col-span-2 sm:col-span-1 pt-1">
+              <p class="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">Địa điểm / Vibe</p>
+              <p id="ticketVibe" class="font-semibold text-stone-800 mt-0.5">Chưa chọn</p>
+            </div>
+            <div class="col-span-2 sm:col-span-1 pt-1">
+              <p class="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">Món ngon thưởng thức</p>
+              <p id="ticketFood" class="font-semibold text-stone-800 mt-0.5">Chưa chọn</p>
+            </div>
+
+            <div class="pt-1">
+              <p class="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">Ngày hẹn</p>
+              <p id="ticketDate" class="font-semibold text-stone-800 mt-0.5">Chưa chọn</p>
+            </div>
+            <div class="pt-1">
+              <p class="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">Khung giờ</p>
+              <p id="ticketTime" class="font-semibold text-stone-800 mt-0.5">Chưa chọn</p>
+            </div>
+
+            <div class="col-span-2 pt-2 border-t border-rose-100/70">
+              <p class="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">Lời dặn dò của Thu</p>
+              <p id="ticketNote" class="italic text-stone-600 text-xs mt-0.5 font-light">"Đúng giờ và chụp ảnh xinh cho Thu nhé!"</p>
+            </div>
+          </div>
+
+          <!-- Stamp & Barcode Footer -->
+          <div class="mt-6 pt-4 border-t-2 border-dashed border-rose-200 flex items-center justify-between">
+            <div class="flex items-center gap-1.5 text-[10px] font-mono text-stone-400 tracking-widest uppercase">
+              <span>||| | | || ||| || ||||</span>
+            </div>
+            <div class="px-3 py-1 rounded-md border-2 border-rose-400 text-rose-600 font-serif italic text-xs font-bold -rotate-3 select-none">
+              APPROVED WITH LOVE 💖
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-3 pt-2">
+          
+          <!-- Copy formatted message button -->
+          <button type="button" id="copyTicketMsgBtn" 
+            class="w-full py-3.5 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-medium text-xs sm:text-sm tracking-wide shadow-lg shadow-rose-500/25 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
+            <span>📋</span>
+            <span>Sao chép tin nhắn để gửi cho Người Bí Ẩn</span>
+          </button>
+
+          <div class="flex items-center justify-center gap-3 pt-1">
+            <!-- Back to wishes button -->
+            <button type="button" id="gameGoToWishesBtn" 
+              class="px-5 py-2.5 rounded-full bg-white hover:bg-stone-50 border border-stone-200 text-stone-700 text-xs font-medium transition-all active:scale-95 flex items-center gap-1.5 shadow-xs">
+              <span>💌 Xem Lời Chúc Sinh Nhật</span>
+            </button>
+
+            <!-- Reset game button -->
+            <button type="button" id="resetGameBtn" 
+              class="px-4 py-2.5 rounded-full bg-transparent hover:bg-stone-100 text-stone-500 text-xs font-medium transition-all active:scale-95">
+              <span>🔄 Chọn lại</span>
+            </button>
+          </div>
+
+          <!-- Toast Copy Notification -->
+          <div id="copyToast" class="hidden text-center py-2 px-4 rounded-full bg-stone-800 text-amber-200 text-xs font-medium shadow-md transition-all">
+            ✨ Đã sao chép tin nhắn! Thu chỉ cần dán gửi qua Zalo / Messenger cho Người Bí Ẩn nhé! 🌸
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
 
   <!-- ========================================== -->
   <!-- FOOTER                                     -->
@@ -1278,37 +1742,408 @@
       }
 
       // ----------------------------------------------------
-      // RIGHT ANSWER BUTTON: "Chưa có nha 🌸" -> ENTER SITE!
+      // RIGHT ANSWER BUTTON: "Chưa có nha 🌸" -> CHOOSE MODE!
       // ----------------------------------------------------
+      const chooseModeCard = document.getElementById('chooseModeCard');
+      const chooseWishesBtn = document.getElementById('chooseWishesBtn');
+      const chooseGameBtn = document.getElementById('chooseGameBtn');
+      const navWishesBtn = document.getElementById('navWishesBtn');
+      const navGameBtn = document.getElementById('navGameBtn');
+      const wishesView = document.getElementById('wishesView');
+      const gameView = document.getElementById('gameView');
+
+      function startMusicIfAllowed() {
+        if (!isPlaying && bgMusic) {
+          const playPromise = bgMusic.play();
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
+              updatePlayState(true);
+            }).catch(() => {
+              updatePlayState(true);
+              startGentleSynth();
+            });
+          }
+        }
+      }
+
+      function closeOverlay() {
+        if (passwordOverlay) {
+          passwordOverlay.classList.add('opacity-0', 'pointer-events-none');
+          setTimeout(() => {
+            passwordOverlay.remove();
+          }, 600);
+        }
+      }
+
+      function showWishesView() {
+        if (wishesView) wishesView.classList.remove('hidden');
+        if (gameView) gameView.classList.add('hidden');
+
+        if (navWishesBtn && navGameBtn) {
+          navWishesBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 bg-rose-500 text-white shadow-xs";
+          navGameBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 text-stone-600 hover:text-rose-600";
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function showGameView() {
+        if (wishesView) wishesView.classList.add('hidden');
+        if (gameView) gameView.classList.remove('hidden');
+
+        if (navWishesBtn && navGameBtn) {
+          navGameBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 bg-rose-500 text-white shadow-xs";
+          navWishesBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 text-stone-600 hover:text-rose-600";
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
       if (btnNo) {
         btnNo.addEventListener('click', () => {
           btnNo.disabled = true;
-          btnNo.textContent = 'Chính xác! Đang mở quà... ✨';
+          btnNo.textContent = 'Chính xác! Đang mở... ✨';
           
-          // Massive celebratory confetti
-          fireMassiveCelebration();
+          firePastelConfetti();
 
           setTimeout(() => {
-            passwordOverlay.classList.add('opacity-0', 'pointer-events-none', 'scale-105');
-            setTimeout(() => {
-              passwordOverlay.remove();
-            }, 750);
-
-            // Auto-play ambient music
-            if (!isPlaying && bgMusic) {
-              const playPromise = bgMusic.play();
-              if (playPromise !== undefined) {
-                playPromise.then(() => {
-                  updatePlayState(true);
-                }).catch(() => {
-                  updatePlayState(true);
-                  startGentleSynth();
-                });
-              }
+            if (window.gsap && questionCard && chooseModeCard) {
+              gsap.to(questionCard, {
+                opacity: 0,
+                scale: 0.9,
+                duration: 0.35,
+                ease: 'power2.in',
+                onComplete: () => {
+                  questionCard.classList.add('hidden');
+                  chooseModeCard.classList.remove('hidden');
+                  gsap.fromTo(chooseModeCard, 
+                    { opacity: 0, scale: 0.92, y: 20 },
+                    { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'back.out(1.5)' }
+                  );
+                }
+              });
+            } else {
+              if (questionCard) questionCard.classList.add('hidden');
+              if (chooseModeCard) chooseModeCard.classList.remove('hidden');
             }
-          }, 650);
+          }, 400);
         });
       }
+
+      // Choice Card Buttons
+      if (chooseWishesBtn) {
+        chooseWishesBtn.addEventListener('click', () => {
+          fireMassiveCelebration();
+          closeOverlay();
+          showWishesView();
+          startMusicIfAllowed();
+        });
+      }
+
+      if (chooseGameBtn) {
+        chooseGameBtn.addEventListener('click', () => {
+          firePastelConfetti();
+          closeOverlay();
+          showGameView();
+          startMusicIfAllowed();
+        });
+      }
+
+      // Top Nav Dock Switchers
+      if (navWishesBtn) navWishesBtn.addEventListener('click', showWishesView);
+      if (navGameBtn) navGameBtn.addEventListener('click', showGameView);
+
+      // ----------------------------------------------------
+      // 10. MINI-GAME DATE PLANNER LOGIC
+      // ----------------------------------------------------
+      const gameSteps = [
+        document.getElementById('gameStep1'),
+        document.getElementById('gameStep2'),
+        document.getElementById('gameStep3'),
+        document.getElementById('gameStep4'),
+        document.getElementById('gameTicketResult')
+      ];
+
+      const stepDots = [
+        document.getElementById('stepDot1'),
+        document.getElementById('stepDot2'),
+        document.getElementById('stepDot3'),
+        document.getElementById('stepDot4')
+      ];
+
+      function setGameStep(step) {
+        gameSteps.forEach((el, idx) => {
+          if (!el) return;
+          if (idx === step - 1) {
+            el.classList.remove('hidden');
+            if (window.gsap) {
+              gsap.fromTo(el, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' });
+            }
+          } else {
+            el.classList.add('hidden');
+          }
+        });
+
+        stepDots.forEach((dot, idx) => {
+          if (!dot) return;
+          if (idx + 1 === step) {
+            dot.className = "flex-1 h-1.5 rounded-full bg-rose-500 transition-all duration-300";
+          } else if (idx + 1 < step) {
+            dot.className = "flex-1 h-1.5 rounded-full bg-rose-300 transition-all duration-300";
+          } else {
+            dot.className = "flex-1 h-1.5 rounded-full bg-stone-200 transition-all duration-300";
+          }
+        });
+
+        // Scroll to top of game container on step change
+        if (gameView) {
+          gameView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      // Selections state
+      let selectedVibe = "Lãng mạn cafe hoàng hôn ngắm view chill ☕";
+      let selectedFood = "Sushi & Đồ Nhật tươi ngon 🍣";
+      let selectedDate = "Cuối tuần này (Thứ 7 hoặc Chủ Nhật) 🌸";
+      let selectedTime = "Buổi tối lung linh (18:30 - 21:30)";
+
+      const customVibeInput = document.getElementById('customVibeInput');
+      const customFoodInput = document.getElementById('customFoodInput');
+      const specificDateInput = document.getElementById('specificDateInput');
+      const customTimeInput = document.getElementById('customTimeInput');
+      const gameCustomNote = document.getElementById('gameCustomNote');
+
+      // Helper for single card selection styling
+      function bindSelectGroup(selector, onSelect) {
+        const cards = document.querySelectorAll(selector);
+        cards.forEach(card => {
+          card.addEventListener('click', () => {
+            cards.forEach(c => {
+              c.classList.remove('border-rose-400', 'bg-rose-50/80', 'shadow-xs', 'ring-2', 'ring-rose-200/60');
+              c.classList.add('border-stone-200/70', 'bg-stone-50/50');
+            });
+            card.classList.remove('border-stone-200/70', 'bg-stone-50/50');
+            card.classList.add('border-rose-400', 'bg-rose-50/80', 'shadow-xs', 'ring-2', 'ring-rose-200/60');
+            if (onSelect) onSelect(card.dataset.value || card.innerText.trim());
+          });
+        });
+      }
+
+      // Initialize Card bindings
+      bindSelectGroup('.vibe-card', (val) => {
+        selectedVibe = val;
+        if (customVibeInput) customVibeInput.value = '';
+      });
+
+      bindSelectGroup('.food-card', (val) => {
+        selectedFood = val;
+        if (customFoodInput) customFoodInput.value = '';
+      });
+
+      bindSelectGroup('.date-card', (val) => {
+        selectedDate = val;
+        if (specificDateInput) specificDateInput.value = '';
+      });
+
+      bindSelectGroup('.time-card', (val) => {
+        selectedTime = val;
+        if (customTimeInput) customTimeInput.value = '';
+      });
+
+      // Clear card highlights if typing custom input
+      if (customVibeInput) {
+        customVibeInput.addEventListener('input', () => {
+          if (customVibeInput.value.trim().length > 0) {
+            document.querySelectorAll('.vibe-card').forEach(c => {
+              c.classList.remove('border-rose-400', 'bg-rose-50/80', 'shadow-xs', 'ring-2', 'ring-rose-200/60');
+              c.classList.add('border-stone-200/70', 'bg-stone-50/50');
+            });
+          }
+        });
+      }
+
+      if (customFoodInput) {
+        customFoodInput.addEventListener('input', () => {
+          if (customFoodInput.value.trim().length > 0) {
+            document.querySelectorAll('.food-card').forEach(c => {
+              c.classList.remove('border-rose-400', 'bg-rose-50/80', 'shadow-xs', 'ring-2', 'ring-rose-200/60');
+              c.classList.add('border-stone-200/70', 'bg-stone-50/50');
+            });
+          }
+        });
+      }
+
+      if (specificDateInput) {
+        specificDateInput.addEventListener('change', () => {
+          if (specificDateInput.value) {
+            document.querySelectorAll('.date-card').forEach(c => {
+              c.classList.remove('border-rose-400', 'bg-rose-50/80', 'shadow-xs', 'ring-2', 'ring-rose-200/60');
+              c.classList.add('border-stone-200/70', 'bg-stone-50/50');
+            });
+          }
+        });
+      }
+
+      if (customTimeInput) {
+        customTimeInput.addEventListener('input', () => {
+          if (customTimeInput.value.trim().length > 0) {
+            document.querySelectorAll('.time-card').forEach(c => {
+              c.classList.remove('border-rose-400', 'bg-rose-50/80', 'shadow-xs', 'ring-2', 'ring-rose-200/60');
+              c.classList.add('border-stone-200/70', 'bg-stone-50/50');
+            });
+          }
+        });
+      }
+
+      // Step Navigation buttons
+      const nextToStep2Btn = document.getElementById('nextToStep2Btn');
+      const backToStep1Btn = document.getElementById('backToStep1Btn');
+      const nextToStep3Btn = document.getElementById('nextToStep3Btn');
+      const backToStep2Btn = document.getElementById('backToStep2Btn');
+      const nextToStep4Btn = document.getElementById('nextToStep4Btn');
+      const backToStep3Btn = document.getElementById('backToStep3Btn');
+      const generateTicketBtn = document.getElementById('generateTicketBtn');
+      const gameGoToWishesBtn = document.getElementById('gameGoToWishesBtn');
+      const resetGameBtn = document.getElementById('resetGameBtn');
+      const copyTicketMsgBtn = document.getElementById('copyTicketMsgBtn');
+      const copyToast = document.getElementById('copyToast');
+
+      if (nextToStep2Btn) nextToStep2Btn.addEventListener('click', () => setGameStep(2));
+      if (backToStep1Btn) backToStep1Btn.addEventListener('click', () => setGameStep(1));
+      if (nextToStep3Btn) nextToStep3Btn.addEventListener('click', () => setGameStep(3));
+      if (backToStep2Btn) backToStep2Btn.addEventListener('click', () => setGameStep(2));
+      if (nextToStep4Btn) nextToStep4Btn.addEventListener('click', () => setGameStep(4));
+      if (backToStep3Btn) backToStep3Btn.addEventListener('click', () => setGameStep(3));
+
+      // Generate Boarding Pass
+      if (generateTicketBtn) {
+        generateTicketBtn.addEventListener('click', () => {
+          const finalVibe = (customVibeInput && customVibeInput.value.trim()) ? customVibeInput.value.trim() : selectedVibe;
+          const finalFood = (customFoodInput && customFoodInput.value.trim()) ? customFoodInput.value.trim() : selectedFood;
+          
+          let finalDate = selectedDate;
+          if (specificDateInput && specificDateInput.value) {
+            const parts = specificDateInput.value.split('-');
+            if (parts.length === 3) {
+              finalDate = `Ngày ${parts[2]}/${parts[1]}/${parts[0]} 🌸`;
+            } else {
+              finalDate = `Ngày ${specificDateInput.value} 🌸`;
+            }
+          }
+
+          const finalTime = (customTimeInput && customTimeInput.value.trim()) ? customTimeInput.value.trim() : selectedTime;
+          const finalNote = (gameCustomNote && gameCustomNote.value.trim()) ? gameCustomNote.value.trim() : 'Đúng giờ và chụp ảnh xinh cho Thu nhé! ✨';
+
+          // Populate Ticket
+          const ticketVibe = document.getElementById('ticketVibe');
+          const ticketFood = document.getElementById('ticketFood');
+          const ticketDate = document.getElementById('ticketDate');
+          const ticketTime = document.getElementById('ticketTime');
+          const ticketNote = document.getElementById('ticketNote');
+
+          if (ticketVibe) ticketVibe.textContent = finalVibe;
+          if (ticketFood) ticketFood.textContent = finalFood;
+          if (ticketDate) ticketDate.textContent = finalDate;
+          if (ticketTime) ticketTime.textContent = finalTime;
+          if (ticketNote) ticketNote.textContent = finalNote.startsWith('“') ? finalNote : `“${finalNote}”`;
+
+          setGameStep(5);
+          fireMassiveCelebration();
+        });
+      }
+
+      // Copy message to clipboard
+      if (copyTicketMsgBtn) {
+        copyTicketMsgBtn.addEventListener('click', () => {
+          const ticketVibe = document.getElementById('ticketVibe')?.textContent || selectedVibe;
+          const ticketFood = document.getElementById('ticketFood')?.textContent || selectedFood;
+          const ticketDate = document.getElementById('ticketDate')?.textContent || selectedDate;
+          const ticketTime = document.getElementById('ticketTime')?.textContent || selectedTime;
+          const ticketNote = document.getElementById('ticketNote')?.textContent || 'Đúng giờ nha!';
+
+          const msg = `🎟️ [VÉ HẸN HÒ VIP #HT-1710-VIP] 🌸\n` +
+                      `Gửi Người Bí Ẩn, Hoài Thu đã lên lịch hẹn hò rồi nè:\n` +
+                      `- 🌸 Khách mời: Hoài Thu\n` +
+                      `- 📍 Nơi muốn đi: ${ticketVibe}\n` +
+                      `- 🍽️ Món muốn ăn: ${ticketFood}\n` +
+                      `- 📅 Ngày hẹn: ${ticketDate}\n` +
+                      `- ⏰ Khung giờ: ${ticketTime}\n` +
+                      `- 💌 Lời nhắn gửi: ${ticketNote}\n` +
+                      `✨ Cam kết đặc quyền: Đưa đón tận nơi, bao trọn 100% & phó nháy chụp 1001 tấm ảnh xinh! 💖`;
+
+          function showSuccessToast() {
+            if (copyToast) {
+              copyToast.classList.remove('hidden');
+              setTimeout(() => {
+                copyToast.classList.add('hidden');
+              }, 4000);
+            }
+          }
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(msg).then(showSuccessToast).catch(() => {
+              fallbackCopy(msg);
+            });
+          } else {
+            fallbackCopy(msg);
+          }
+
+          function fallbackCopy(text) {
+            try {
+              const ta = document.createElement('textarea');
+              ta.value = text;
+              ta.style.position = 'fixed';
+              ta.style.left = '-9999px';
+              document.body.appendChild(ta);
+              ta.focus();
+              ta.select();
+              document.execCommand('copy');
+              document.body.removeChild(ta);
+              showSuccessToast();
+            } catch (err) {
+              console.log('Copy failed:', err);
+            }
+          }
+        });
+      }
+
+      // Back to Wishes from game ticket
+      if (gameGoToWishesBtn) {
+        gameGoToWishesBtn.addEventListener('click', () => {
+          showWishesView();
+        });
+      }
+
+      // Reset Game
+      if (resetGameBtn) {
+        resetGameBtn.addEventListener('click', () => {
+          if (customVibeInput) customVibeInput.value = '';
+          if (customFoodInput) customFoodInput.value = '';
+          if (specificDateInput) specificDateInput.value = '';
+          if (customTimeInput) customTimeInput.value = '';
+          if (gameCustomNote) gameCustomNote.value = '';
+
+          // Reset default card clicks
+          const firstVibe = document.querySelector('.vibe-card');
+          if (firstVibe) firstVibe.click();
+          const firstFood = document.querySelector('.food-card');
+          if (firstFood) firstFood.click();
+          const firstDate = document.querySelector('.date-card');
+          if (firstDate) firstDate.click();
+          const firstTime = document.querySelector('.time-card');
+          if (firstTime) firstTime.click();
+
+          setGameStep(1);
+        });
+      }
+
+      // Activate initial card highlights
+      const initVibe = document.querySelector('.vibe-card');
+      if (initVibe) initVibe.click();
+      const initFood = document.querySelector('.food-card');
+      if (initFood) initFood.click();
+      const initDate = document.querySelector('.date-card');
+      if (initDate) initDate.click();
+      const initTime = document.querySelector('.time-card');
+      if (initTime) initTime.click();
 
       // ----------------------------------------------------
       // PIN INPUT LISTENERS
